@@ -5,17 +5,16 @@ import { Footer } from "../components/Footer";
 
 const MainLayout = ({ children }) => {
     return (
-        <div className="d-flex flex-column min-vh-100">
+        <div>
             <Navbar />
             <div className="container-fluid">
                 <div className="row">
                     <Sidebar />
-                    <main className="flex-grow-1 p-3">
+                    <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                         {children}
                     </main>
                 </div>
             </div>
-            <Footer />
         </div>
     )
 }
