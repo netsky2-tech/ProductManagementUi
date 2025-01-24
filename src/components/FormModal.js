@@ -2,42 +2,49 @@ import React, { useState, useEffect } from 'react';
 import { useApi } from '../services/api';
 
 const FormModal = ({ show, onClose, onSave, initialData = {}, fields = [] }) => {
-  const [formData, setFormData] = useState(
-    fields.reduce((acc, field) => {
-      acc[field.name] = initialData[field.name] || '';
-      return acc;
-    }, {})
-  );
+
+  const [formData, setFormData] = useState({});
   const [selectOptions, setSelectOptions] = useState({})
   const { getSelectOptions } = useApi()
 
+console.log(initialData)
+  useEffect(() => {
+    if (initialData) {
+      setFormData(
+        fields.reduce((acc, field) => {
+          acc[field.name] = initialData[field.name] || "";
+          return acc;
+        }, {})
+      );
+    }
+  }, [initialData, fields]);
+
+
+  const [selectsLoaded, setSelectsLoaded] = useState(false);
 
   useEffect(() => {
-    setFormData((prevData) => ({
-      ...prevData,
-      ...initialData,
-    }));
+    if (selectsLoaded) return;
 
     const fetchSelectData = async () => {
       const optionsData = {};
-      for( const field of fields){
-        if(field.type === "select" && field.apiEndpoint){
-          try{
-            const response = await getSelectOptions(field.apiEndpoint)
-            const data = response.data
+      for (const field of fields) {
+        if (field.type === "select" && field.apiEndpoint) {
+          try {
+            const response = await getSelectOptions(field.apiEndpoint);
+            const data = response.data;
             optionsData[field.name] = data;
-          } catch(error) {
-            console.error(`Error obteniendo os datos de ${field.name}: `, error)
-            throw error;
+          } catch (error) {
+            console.error(`Error obteniendo los datos de ${field.name}: `, error);
           }
         }
       }
       setSelectOptions(optionsData);
-    }
+      setSelectsLoaded(true);
+    };
 
-    fetchSelectData()
+    fetchSelectData();
+  }, [fields, getSelectOptions, selectsLoaded]);
 
-  }, [fields ,initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +75,7 @@ const FormModal = ({ show, onClose, onSave, initialData = {}, fields = [] }) => 
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="title-modal">
-              {initialData?.id ? 'Actualizar registro' : 'Crear Record'}
+              {initialData?.id ? 'Actualizar registro' : 'Crear registro'}
             </h5>
             <button type="button" className="btn-close" onClick={handleClose} aria-label="Close"></button>
           </div>
@@ -101,6 +108,7 @@ const FormModal = ({ show, onClose, onSave, initialData = {}, fields = [] }) => 
                         value={formData[field.name] || ''}
                         onChange={handleChange}
                         required={field.required}
+                        readOnly={field.readOnly || false}
                       />
                   )}
                 </div>

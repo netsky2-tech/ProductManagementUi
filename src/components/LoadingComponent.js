@@ -13,7 +13,12 @@ const LoadingComponent = ({ size = "md", message = "Cargando.."}) => {
     if(!isLoading) return null;
     
     return (
-        <div className="d-flex flex-column align-items-center justify-content-center vh-100">
+        <div className="d-flex flex-column align-items-center justify-content-center vh-100"
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          zIndex: 1050
+        }}
+        >
           <div className={`spinner-border text-primary ${sizes}`} role="status">
             <span className="visually-hidden">{loadingMessage}</span>
           </div>

@@ -8,9 +8,10 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     const [searchTerm, setSearchTerm] = useState("")
     const [showModal, setShowModal] = useState(false)
     const [showNotification, setShowNotification] = useState(false)
-    const [currentProduct, setCurrentProduct] = useState(null)
+    const [currentRow, setCurrentRow] = useState(null)
     const [message, setMessage] = useState("")
     const { fetchItems, createItem, updateItem, deleteItem } = useApi()
+    const [isUpdate, setIsUpdate] = useState(false)
 
     const fetchItemsData = async () => {
         const response = await fetchItems(apiEndpoint)
@@ -26,29 +27,33 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     }, [])
 
     const handleCreate = () => {
-        setCurrentProduct(null)
+        setCurrentRow(null)
         setShowModal(true)
     };
 
-    const handleUpdate = async (product) => {
-        setCurrentProduct(product)
+    const handleUpdate = async (data) => {
+        setIsUpdate(true)
+        setCurrentRow(data)
         setShowModal(true)
     }
 
-    const handleDelete = async (id) => {
-        const success = await deleteItem(apiEndpoint, id);
+    const handleDelete = async (item) => {
+        const success = await deleteItem(item.id, apiEndpoint, "Elimando registro..");
         if (success) {
+          setMessage(success.message)
+          setShowNotification(true)
           fetchItemsData()
         }
     };
 
     const handleSave  = async (data) => {
-
-        if(data.id) {
-            const result = await updateItem(apiEndpoint, data)
+        if(isUpdate) {
+          console.log(data)
+            const result = await updateItem(data.id, apiEndpoint, data, "Actualizando registro..")
             setMessage(result.message)
             setShowNotification(true)
             await fetchItemsData()
+            setIsUpdate(false)
         } else {
             const result = await createItem(apiEndpoint,data)
             setMessage(result.message)
@@ -130,7 +135,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
         show={showModal}
         onClose={() => setShowModal(false)}
         onSave={handleSave}
-        initialData={currentProduct || {}}
+        initialData={currentRow || {}}
         fields={fields}
         ></FormModal>
 

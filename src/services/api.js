@@ -1,6 +1,6 @@
 import { useLoading } from "../context/LoadingContext";
 
-const API_URL = 'https://localhost:7078/api'
+const API_URL = process.env.REACT_APP_API_URL
 
 export const useApi = () => {
   const { showLoading, hideLoading } = useLoading();
@@ -57,10 +57,10 @@ export const useApi = () => {
   }
 
 
-  const updateItem = async (endpoint, newItem, loadingMessage) => {
+  const updateItem = async (id, endpoint, newItem, loadingMessage) => {
     try {
       showLoading(loadingMessage)
-      const response = await fetch(`${API_URL}/${endpoint}`, {
+      const response = await fetch(`${API_URL}/${endpoint}/${id}`, {
         method: 'PUT',
         body: JSON.stringify(newItem),
         headers: { 'Content-Type': 'application/json' },
@@ -77,10 +77,10 @@ export const useApi = () => {
     }
   };
 
-  const deleteItem = async (endpoint, loadingMessage) => {
+  const deleteItem = async (id, endpoint, loadingMessage) => {
     try {
       showLoading(loadingMessage)
-      const response = await fetch(`${API_URL}/${endpoint}`, {
+      const response = await fetch(`${API_URL}/${endpoint}/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
