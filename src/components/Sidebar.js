@@ -9,6 +9,9 @@ const Sidebar = () => {
           <li className="nav-item">
             <NavLink className="nav-link" to="/products">Productos</NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/categories">Categorias</NavLink>
+          </li>
         </ul>
       </div>
     </nav>

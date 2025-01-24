@@ -53,12 +53,12 @@ export const createItem = async (endpoint, newItem) => {
 
     } catch (error) {
 
-      console.error("Error updating item:", error);
+      console.error("Error actualizando item:", error);
       throw error;
     }
   };
 
-  export const deleteItem = async (endpoint, newItem) => {
+  export const deleteItem = async (endpoint) => {
     try {
       const response = await fetch(`${API_URL}/${endpoint}`, {
         method: 'DELETE',
@@ -69,7 +69,22 @@ export const createItem = async (endpoint, newItem) => {
 
     } catch (error) {
 
-      console.error("Error deleting item:", error);
+      console.error("Error eliminando item:", error);
       throw error;
     }
   };
+
+  export const getSelectOptions = async (endpoint) => {
+    try{
+      const response = await fetch(`${API_URL}/${endpoint}`,{
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+
+      return await handleResponse(response);
+    } catch(error) {
+
+      console.error("Error obteniendo los datos:", error)
+      throw error;
+    }
+  }

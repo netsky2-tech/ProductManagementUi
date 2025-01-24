@@ -4,15 +4,13 @@ import { FormModal } from "./FormModal";
 
 const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     const [items, setItems] = useState([]);
-    const [editingItem, setEditingItem] = useState(null)
-    const [updatedItem, setUpdatedItem] = useState("")
     const [searchTerm, setSearchTerm] = useState("")
     const [showModal, setShowModal] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null)
 
     const fetchItemsData = async () => {
-        const data = await fetchItems(apiEndpoint)
-        setItems(data)
+        const response = await fetchItems(apiEndpoint)
+        setItems(response.data.items)
     }
 
     useEffect(() => {
@@ -36,14 +34,14 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
         }
     };
 
-    const handleSave  = async (product) => {
+    const handleSave  = async (data) => {
 
-        if(product.productId) {
-            await updateItem(apiEndpoint, product)
-            fetchItemsData()
+        if(data.id) {
+            await updateItem(apiEndpoint, data)
+            await fetchItemsData()
         } else {
-            await createItem(product)
-            fetchItemsData()
+            await createItem(data)
+            await fetchItemsData()
         }
         setShowModal(false)
     }
@@ -52,7 +50,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
 
     return (
     <div className="container mt-5">
-        <h2 className="mb-4">{catalogName} CRUD</h2>
+        <h2 className="mb-4"> Administración de {catalogName}</h2>
     
         {/* Filtro */}
         <div className="mb-3">
@@ -67,52 +65,55 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     
         {/* Crear Nuevo Item */}
         <div className="mb-3">
-            <button onClick={handleCreate} className="btn btn-primary mt-2">Add {catalogName}</button>
+            <button onClick={handleCreate} className="btn btn-primary mt-2">Crear {catalogName}</button>
         </div>
     
         {/* Lista de Items */}
-        <table className="table">
-            <thead>
-              <tr>
-                {columns.map((col, index) => (
-                  <th key={index}>{col}</th>
-                ))}
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>
-                    {editingItem === item.id ? (
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={updatedItem}
-                        onChange={(e) => setUpdatedItem(e.target.value)}
-                      />
-                    ) : (
-                      item.name
-                    )}
-                  </td>
-                  <td>
-                    {editingItem === item.id ? (
-                      <button className="btn btn-success" onClick={() => handleUpdate(item.id)}>Update</button>
-                    ) : (
-                      <button className="btn btn-warning" onClick={() => {
-                        setEditingItem(item.id);
-                        setUpdatedItem(item.name);
-                      }}>Edit</button>
-                    )}
-                    <button className="btn btn-danger ms-2" onClick={() => handleDelete(item.id)}>Delete</button>
-                  </td>
+        <div className="table-responsive">
+          <table className="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  {columns.map((col, index) => (
+                    <th key={index}>{col.label}</th>
+                  ))}
+                  <th>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {items && items.length > 0 ? (
+                  items.map((item, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {columns.map((col, colIndex) => (
+                        <td key={colIndex}>{item[col.key]}</td>
+                      ))}
+                      <td>
+                        <button 
+                          className="btn btn-warning btn-sm me-2"
+                          onClick={() => handleUpdate(item)}
+                        > Editar
+                        </button>
 
-        {/*Modal for create or edit item*/}
+                        <button 
+                          className="btn btn-danger btn-sm me-2"
+                          onClick={() => handleDelete(item)}
+                        > Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+
+                ) : (
+                  <tr>
+                    <td colSpan={columns.length + 1} className="text-center">
+                      No records found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+          </table>
+        </div>
+
+        {/*Modal para crear y  actualizar registros*/}
         <FormModal
         show={showModal}
         onClose={() => setShowModal(false)}
