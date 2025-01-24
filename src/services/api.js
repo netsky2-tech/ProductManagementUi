@@ -1,14 +1,22 @@
+import { useLoading } from "../context/LoadingContext";
+
 const API_URL = 'https://localhost:7078/api'
 
-const handleResponse = async (response) => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-  return response.json();
-}
+export const useApi = () => {
+  const { showLoading, hideLoading } = useLoading();
 
-export const fetchItems = async (endpoint) => {
+  const handleResponse = async (response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  }
+
+  const fetchItems = async (endpoint, loadingMessage) => {
+
     try{
+
+        showLoading(loadingMessage);
 
         const response = await fetch(`${API_URL}/${endpoint}`,
           {
@@ -21,11 +29,16 @@ export const fetchItems = async (endpoint) => {
 
         console.error("Error fetching items:", error)
         throw error;
-    }
-}
+    } finally{
 
-export const createItem = async (endpoint, newItem) => {
+      hideLoading();
+    }
+  }
+
+  const createItem = async (endpoint, newItem, loadingMessage) => {
     try {
+      showLoading(loadingMessage);
+
       const response = await fetch(`${API_URL}/${endpoint}`, {
         method: 'POST',
         body: JSON.stringify(newItem),
@@ -38,11 +51,15 @@ export const createItem = async (endpoint, newItem) => {
 
       console.error("Error creating item:", error);
       throw error;
+    } finally {
+      hideLoading()
     }
-  };
+  }
 
-  export const updateItem = async (endpoint, newItem) => {
+
+  const updateItem = async (endpoint, newItem, loadingMessage) => {
     try {
+      showLoading(loadingMessage)
       const response = await fetch(`${API_URL}/${endpoint}`, {
         method: 'PUT',
         body: JSON.stringify(newItem),
@@ -55,11 +72,14 @@ export const createItem = async (endpoint, newItem) => {
 
       console.error("Error actualizando item:", error);
       throw error;
+    }finally{
+      hideLoading()
     }
   };
 
-  export const deleteItem = async (endpoint) => {
+  const deleteItem = async (endpoint, loadingMessage) => {
     try {
+      showLoading(loadingMessage)
       const response = await fetch(`${API_URL}/${endpoint}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
@@ -71,11 +91,15 @@ export const createItem = async (endpoint, newItem) => {
 
       console.error("Error eliminando item:", error);
       throw error;
+    }finally {
+
+      hideLoading()
     }
   };
 
-  export const getSelectOptions = async (endpoint) => {
+  const getSelectOptions = async (endpoint, loadingMessage) => {
     try{
+      showLoading(loadingMessage)
       const response = await fetch(`${API_URL}/${endpoint}`,{
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
@@ -86,5 +110,27 @@ export const createItem = async (endpoint, newItem) => {
 
       console.error("Error obteniendo los datos:", error)
       throw error;
+    } finally {
+      hideLoading()
     }
   }
+
+  return {
+    fetchItems, 
+    createItem,
+    updateItem,
+    deleteItem,
+    getSelectOptions
+  }
+}
+
+
+
+
+
+
+
+
+
+
+  

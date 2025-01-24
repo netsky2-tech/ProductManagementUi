@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getSelectOptions } from '../services/api';
+import { useApi } from '../services/api';
 
 const FormModal = ({ show, onClose, onSave, initialData = {}, fields = [] }) => {
   const [formData, setFormData] = useState(
@@ -9,6 +9,7 @@ const FormModal = ({ show, onClose, onSave, initialData = {}, fields = [] }) => 
     }, {})
   );
   const [selectOptions, setSelectOptions] = useState({})
+  const { getSelectOptions } = useApi()
 
 
   useEffect(() => {

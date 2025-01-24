@@ -1,10 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
 import AppRoutes from './routes/AppRoutes';
+import { LoadingComponent } from "./components/LoadingComponent";
+import { LoadingProvider } from "./context/LoadingContext";
 
 function App() {
+
   return (
-    <AppRoutes />
+    <LoadingProvider>
+      <LoadingComponent />
+      <AppRoutes />
+    </LoadingProvider>
   );
 }
 

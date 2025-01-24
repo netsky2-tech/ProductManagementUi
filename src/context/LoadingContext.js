@@ -18,16 +18,16 @@ export const LoadingProvider = ( {children} ) => {
       };
 
     return (
-        <LoadingContext.Provider value={{ 
-            isLoading,
-            loadingMessage, 
-            showLoading,
-            hideLoading
-        
-        }}>
-            {children}
-        </LoadingContext.Provider>
+        <LoadingContext.Provider value={{ isLoading, loadingMessage, showLoading, hideLoading }}>
+        {children}
+      </LoadingContext.Provider>
     )
 }
 
-export const useLoading = () => useContext(LoadingContext)
+export const useLoading = () => {
+    const context = useContext(LoadingContext)
+    if(!context){
+        throw new Error("useLoading debe usarse atraves del LoadingProvider")
+    }
+    return context
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchItems, createItem, updateItem, deleteItem } from "../services/api";
+import { useApi } from "../services/api";
 import { FormModal } from "./FormModal";
 import { ToastNotifications } from "./ToastNotifications";
 
@@ -10,6 +10,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     const [showNotification, setShowNotification] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null)
     const [message, setMessage] = useState("")
+    const { fetchItems, createItem, updateItem, deleteItem } = useApi()
 
     const fetchItemsData = async () => {
         const response = await fetchItems(apiEndpoint)
