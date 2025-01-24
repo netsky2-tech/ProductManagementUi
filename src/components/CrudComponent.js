@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchItems, createItem, updateItem, deleteItem } from "../services/api";
 import { FormModal } from "./FormModal";
+import { ToastNotifications } from "./ToastNotifications";
 
 const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     const [items, setItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState("")
     const [showModal, setShowModal] = useState(false)
+    const [showNotification, setShowNotification] = useState(false)
     const [currentProduct, setCurrentProduct] = useState(null)
+    const [message, setMessage] = useState("")
 
     const fetchItemsData = async () => {
         const response = await fetchItems(apiEndpoint)
@@ -14,8 +17,12 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     }
 
     useEffect(() => {
+      setTimeout(() => setShowNotification(false), 5000);
+    }, [showNotification])
+
+    useEffect(() => {
         fetchItemsData();
-    }, [apiEndpoint])
+    }, [])
 
     const handleCreate = () => {
         setCurrentProduct(null)
@@ -37,10 +44,14 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     const handleSave  = async (data) => {
 
         if(data.id) {
-            await updateItem(apiEndpoint, data)
+            const result = await updateItem(apiEndpoint, data)
+            setMessage(result.message)
+            setShowNotification(true)
             await fetchItemsData()
         } else {
-            await createItem(apiEndpoint,data)
+            const result = await createItem(apiEndpoint,data)
+            setMessage(result.message)
+            setShowNotification(true)
             await fetchItemsData()
         }
         setShowModal(false)
@@ -121,6 +132,14 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
         initialData={currentProduct || {}}
         fields={fields}
         ></FormModal>
+
+        {/*Notificaciones */}
+        <ToastNotifications
+        title="Notificacion"
+        message={message}
+        show={showNotification}
+        />
+
     </div>
     );
 }

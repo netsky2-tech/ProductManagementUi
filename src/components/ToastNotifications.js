@@ -1,17 +1,27 @@
-const ToastNotifications = ({title, message}) => {
+import { useState } from "react";
+
+const ToastNotifications = ({title, message, show}) => {
+
     return (
-        <div class="toast-container position-fixed bottom-0 end-0 p-3" data-bs-autohide="true">
-            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                <strong class="me-auto">{title}</strong>
+        show && (
+            <div 
+             id="liveToast" 
+             className="toast show position-fixed bottom-0 end-0 p-3"
+             role="alert" 
+             aria-live="assertive" 
+             aria-atomic="true"
+             data-bs-autohide="true"
+             >
+                <div className="toast-header">
+                <strong className="me-auto">{title}</strong>
                 <small>Ahora</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+                <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Cerrar"></button>
                 </div>
-                <div class="toast-body">
+                <div className="toast-body">
                 {message}
                 </div>
             </div>
-        </div>
+        )
     );
 }
 
