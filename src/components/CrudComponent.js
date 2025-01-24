@@ -40,7 +40,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
             await updateItem(apiEndpoint, data)
             await fetchItemsData()
         } else {
-            await createItem(data)
+            await createItem(apiEndpoint,data)
             await fetchItemsData()
         }
         setShowModal(false)
