@@ -13,7 +13,8 @@ Caracteristicas principales:
 
 # 1. Clonar el repositorio
 
-git clone https://github.com/netsky2-tech/ProductManagementUi.git
+git clone https://github.com/netsky2-tech/ProductManagementUi.git  
+
 cd ProductManagementUi
 
 # 2. Instala dependencias
@@ -22,11 +23,12 @@ npm install
 
 # 3. Configura variables de entorno
 
-Renombra el archivo `.env.example` a `.env` y ajusta los valores segun tu entorno de desarrollo
+Renombra el archivo `.env.example` a `.env` y ajusta los valores segun tu entorno de desarrollo  
 
 REACT_APP_API_URL=https://localhost:7078/api
 
 # 4. Ejecuta el proyecto
 
-npm start
+npm start  
+
 Abre http://localhost:3000 para ver la aplicación en el navegador. 

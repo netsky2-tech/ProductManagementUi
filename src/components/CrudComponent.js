@@ -17,6 +17,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
         const response = await fetchItems(apiEndpoint)
         setItems(response.data.items)
     }
+    
 
     useEffect(() => {
       setTimeout(() => setShowNotification(false), 5000);
