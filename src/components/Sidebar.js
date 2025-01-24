@@ -12,6 +12,9 @@ const Sidebar = () => {
           <li className="nav-item">
             <NavLink className="nav-link" to="/categories">Categorias</NavLink>
           </li>
+          <li className="nav-item">
+            <NavLink className="nav-link" to="/units-of-measurements">Unidades de medidas</NavLink>
+          </li>
         </ul>
       </div>
     </nav>
