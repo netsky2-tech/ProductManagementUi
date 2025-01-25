@@ -14,7 +14,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
     const [isUpdate, setIsUpdate] = useState(false)
 
     const fetchItemsData = async () => {
-        const response = await fetchItems(apiEndpoint)
+        const response = await fetchItems(apiEndpoint,"Datos obtenidos correctamente", searchTerm)
         setItems(response.data.items)
     }
     
@@ -25,7 +25,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
 
     useEffect(() => {
         fetchItemsData();
-    }, [])
+    }, [searchTerm])
 
     const handleCreate = () => {
         setCurrentRow(null)
@@ -77,7 +77,7 @@ const CrudComponent = ({ apiEndpoint, catalogName, columns, fields }) => {
               className="form-control"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={`Search ${catalogName}`}
+              placeholder={`Buscar ${catalogName}`}
             />
         </div>
     

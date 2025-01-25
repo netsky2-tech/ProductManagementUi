@@ -12,17 +12,19 @@ export const useApi = () => {
     return response.json();
   }
 
-  const fetchItems = async (endpoint, loadingMessage) => {
+  const fetchItems = async (endpoint, loadingMessage, searchQuery) => {
 
     try{
 
         showLoading(loadingMessage);
+        const url = new URL(`${API_URL}/${endpoint}`);
+        if (searchQuery) {
+          url.searchParams.append("name", searchQuery);
+        }
 
-        const response = await fetch(`${API_URL}/${endpoint}`,
-          {
-            headers: {'Content-Type': 'application/json'}
-          }
-        );
+        const response = await fetch(url, {
+          headers: { "Content-Type": "application/json" },
+        });
         return await handleResponse(response);
 
     } catch (error){

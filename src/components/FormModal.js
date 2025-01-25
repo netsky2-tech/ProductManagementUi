@@ -7,7 +7,6 @@ const FormModal = ({ show, onClose, onSave, initialData = {}, fields = [] }) => 
   const [selectOptions, setSelectOptions] = useState({})
   const { getSelectOptions } = useApi()
 
-console.log(initialData)
   useEffect(() => {
     if (initialData) {
       setFormData(
