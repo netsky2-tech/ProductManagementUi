@@ -88,6 +88,7 @@ const FormModal = ({ show, onClose, onSave, initialData = {}, fields = [] }) => 
                     id={field.name}
                     name={field.name}
                     className="form-select"
+                    required={field.required}
                     value={formData[field.name] || ""}
                     onChange={handleChange}
                     >
